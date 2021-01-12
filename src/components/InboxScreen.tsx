@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-import TaskList from "./TaskList";
+import { TaskList } from "./TaskList";
+import { addTask } from "../lib/redux";
 
 export function PureInboxScreen({ error }: any) {
+  const returnState = useSelector((state: any[]) => state);
+  const [task, setTask] = useState("");
+  const dispatch = useDispatch();
   if (error) {
     return (
       <div className="page lists-show">
@@ -24,7 +28,23 @@ export function PureInboxScreen({ error }: any) {
           <span className="title-wrapper">Taskbox</span>
         </h1>
       </nav>
-      <TaskList />
+      <div style={{ margin: "10px 20px" }}>
+        <input
+          placeholder="Enter Your Task"
+          style={{ padding: "15px" }}
+          onChange={(e) => setTask(e.target.value)}
+        />
+        <br />
+        <br />
+        <button
+          style={{ padding: "15px" }}
+          onClick={() => dispatch(addTask(task))}
+        >
+          Add Task
+        </button>
+      </div>
+      <br />
+      <TaskList tasks={returnState} loading={false} />
     </div>
   );
 }
@@ -38,4 +58,4 @@ PureInboxScreen.defaultProps = {
   error: null,
 };
 
-export default connect(({ error }: any) => ({ error }))(PureInboxScreen);
+export default PureInboxScreen;

@@ -1,14 +1,21 @@
 import React from "react";
+import { useDispatch } from "react-redux";
+import { archiveTask, pinTask } from "../lib/redux";
 
-export default function Task({
-  task: { id, title, state },
-  onArchiveTask,
-  onPinTask,
-}: {
-  task: any;
-  onArchiveTask: any;
-  onPinTask: any;
-}) {
+export interface TaskInterface {
+  id?: string;
+  title?: string;
+  state?: string;
+  updatedAt?: Date;
+}
+
+export interface TasksProps {
+  task: TaskInterface;
+}
+
+const Task: React.FC<TasksProps> = ({ task: { id, title, state } }) => {
+  console.log(state);
+  const dispatch = useDispatch();
   return (
     <div className={`list-item ${state}`}>
       <label className="checkbox">
@@ -18,7 +25,10 @@ export default function Task({
           disabled={true}
           name="checked"
         />
-        <span className="checkbox-custom" onClick={() => onArchiveTask(id)} />
+        <span
+          className="checkbox-custom"
+          onClick={() => dispatch(archiveTask(id))}
+        />
       </label>
       <div className="title">
         <input
@@ -30,13 +40,19 @@ export default function Task({
       </div>
 
       <div className="actions" onClick={(event) => event.stopPropagation()}>
-        {state !== "TASK_ARCHIVED" && (
-          // eslint-disable-next-line jsx-a11y/anchor-is-valid
-          <a onClick={() => onPinTask(id)}>
-            <span className={`icon-star`} />
+        {state !== "TASK_ARCHIVED" ? (
+          <a href="/" onClick={() => dispatch(pinTask(id))}>
+            <span
+              onClick={(e) => {
+                e.preventDefault();
+              }}
+              className={`icon-star`}
+            ></span>
           </a>
-        )}
+        ) : null}
       </div>
     </div>
   );
-}
+};
+
+export default Task;
