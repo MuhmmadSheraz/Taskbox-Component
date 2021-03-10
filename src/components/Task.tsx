@@ -12,12 +12,18 @@ export interface TaskInterface {
 export interface TasksProps {
   task: TaskInterface;
 }
-
 const Task: React.FC<TasksProps> = ({ task: { id, title, state } }) => {
-  console.log(state);
   const dispatch = useDispatch();
+  const pinMe = (taskId: string | any) => {
+    dispatch(pinTask(taskId));
+  };
+  const archived = (taskId: any) => {
+    dispatch(archiveTask(taskId));
+  };
+  // const dispatch = useDispatch();
   return (
     <div className={`list-item ${state}`}>
+      {/* Checkbox */}
       <label className="checkbox">
         <input
           type="checkbox"
@@ -25,11 +31,9 @@ const Task: React.FC<TasksProps> = ({ task: { id, title, state } }) => {
           disabled={true}
           name="checked"
         />
-        <span
-          className="checkbox-custom"
-          onClick={() => dispatch(archiveTask(id))}
-        />
+        <span className="checkbox-custom" onClick={() => archived(id)} />
       </label>
+      {/* TaskValue*/}
       <div className="title">
         <input
           type="text"
@@ -38,17 +42,17 @@ const Task: React.FC<TasksProps> = ({ task: { id, title, state } }) => {
           placeholder="Input title"
         />
       </div>
-
+      {/* Archieve Task Icon */}
       <div className="actions" onClick={(event) => event.stopPropagation()}>
         {state !== "TASK_ARCHIVED" ? (
-          <a href="/" onClick={() => dispatch(pinTask(id))}>
+          <span onClick={() => pinMe(id)}>
             <span
               onClick={(e) => {
                 e.preventDefault();
               }}
               className={`icon-star`}
             ></span>
-          </a>
+          </span>
         ) : null}
       </div>
     </div>

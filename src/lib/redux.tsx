@@ -1,10 +1,5 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
-const initialData = [
-  { id: "1", title: "Something", state: "TASK_INBOX" },
-  { id: "2", title: "Something more", state: "TASK_INBOX" },
-  { id: "3", title: "Something else", state: "TASK_INBOX" },
-  { id: "4", title: "Something again", state: "TASK_INBOX" },
-];
+const initialData = [{ id: "1", title: "Something", state: "TASK_INBOX" }];
 const allTasksSlice = createSlice({
   name: "allTasks",
   initialState: initialData,
@@ -12,7 +7,7 @@ const allTasksSlice = createSlice({
     addTask: (state: any, action) => {
       let obj = {
         title: action.payload,
-        id: Math.floor(Math.random() * 100),
+        id: Math.floor(Math.random() * 100).toString(),
         state: "TASK_INBOX",
       };
       return (state = [...state, obj]);
@@ -23,10 +18,12 @@ const allTasksSlice = createSlice({
       );
     },
     pinTask: (state, action) => {
-      console.log("Pinned");
-      return state.map((task) =>
-        task.id === action.payload ? { ...task, state: "TASK_PINNED" } : task
-      );
+      state.forEach((task) => {
+        if (task.id === action.payload) {
+          if (task.state !== "TASK_PINNED") task.state = "TASK_PINNED";
+          else task.state = "TASK_INBOX";
+        }
+      });
     },
   },
 });

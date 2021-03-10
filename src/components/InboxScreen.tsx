@@ -9,6 +9,11 @@ export function PureInboxScreen({ error }: any) {
   const returnState = useSelector((state: any[]) => state);
   const [task, setTask] = useState("");
   const dispatch = useDispatch();
+  const addTaskToList = () => {
+    if (task === "") return alert("Please Fill The TaskBox");
+    dispatch(addTask(task));
+    setTask(" ");
+  };
   if (error) {
     return (
       <div className="page lists-show">
@@ -33,13 +38,11 @@ export function PureInboxScreen({ error }: any) {
           placeholder="Enter Your Task"
           style={{ padding: "15px" }}
           onChange={(e) => setTask(e.target.value)}
+          value={task}
         />
         <br />
         <br />
-        <button
-          style={{ padding: "15px" }}
-          onClick={() => dispatch(addTask(task))}
-        >
+        <button style={{ padding: "15px" }} onClick={addTaskToList}>
           Add Task
         </button>
       </div>

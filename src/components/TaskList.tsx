@@ -1,7 +1,7 @@
 import React from "react";
 import Task from "../components/Task";
-// import "../../index.css";
 import PropTypes from "prop-types";
+
 
 export interface TasksListProps {
   tasks: any;
@@ -10,21 +10,15 @@ export interface TasksListProps {
   onArchiveTask?: any;
 }
 
-export const TaskList: React.FC<TasksListProps> = ({
-  tasks,
-  loading,
-  onPinTask,
-  onArchiveTask,
-}) => {
-  const events = {
-    onPinTask,
-    onArchiveTask,
-  };
-  const [allTask, setAllTask] = React.useState<any>([]);
-  React.useEffect(() => {
+export const TaskList: React.FC<TasksListProps> = ({ tasks, loading }) => {
+  const [allTasksInorder, setAllTaskInOrder] = React.useState<any>([]);
 
-    setAllTask(tasks);
-    console.log("Task Use Effect ===>", tasks);
+  React.useEffect(() => {
+    const tasksInOrder = [
+      ...tasks.filter((t: any) => t.state === "TASK_PINNED"),
+      ...tasks.filter((t: any) => t.state !== "TASK_PINNED"),
+    ];
+    setAllTaskInOrder(tasksInOrder);
   }, [tasks]);
   const LoadingRow = (
     <div className="loading-item">
@@ -60,25 +54,15 @@ export const TaskList: React.FC<TasksListProps> = ({
         </div>
       </div>
     );
-  } 
+  }
 
-  // const TasksInOrder: any = [
-  //   ...tasks.filter((t: any) => t.state === "TASK_PINNED"),
-
-  //   ...tasks.filter((t: any) => t.state !== "TASK_PINNED"),
-  // ];
-  const tasksInOrder = [
-    ...tasks.filter((t: any) => t.state === "TASK_PINNED"),
-    ...tasks.filter((t: any) => t.state !== "TASK_PINNED"),
-  ];
   return (
     <div className="list-items">
-      {tasksInOrder.map((task) => (
-        <Task key={task.id} task={task} {...events} />
-      ))}
+      {tasks &&
+        allTasksInorder.map((task: any) => <Task key={task.id} task={task} />)}
     </div>
   );
-}
+};
 
 TaskList.propTypes = {
   /** Checks if it's in loading state */
